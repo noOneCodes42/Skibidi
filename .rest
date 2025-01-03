@@ -1,0 +1,8 @@
+POST https://skibidi.hpsk.me/query-language
+Content-Type: application/json
+
+{
+    "language": "javascript",
+    "difficulty": 10,
+    "questions": 50
+}
