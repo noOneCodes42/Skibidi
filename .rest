@@ -3,6 +3,6 @@ Content-Type: application/json
 
 {
     "language": "javascript",
-    "difficulty": 10,
-    "questions": 50
+    "difficulty": 5,
+    "questions": 5
 }
