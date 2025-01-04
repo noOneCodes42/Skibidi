@@ -80,7 +80,7 @@ app.post("/query-language", async (req, res) => {
     }
     try {
         res.setHeader("Content-Type", "application/json")
-        let comp = await getCompletion(`Provide a list of ${questions} MCQ with 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with the questions in the "questions" array. Please avoid formatting the code block and just send the raw code.`);
+        let comp = await getCompletion(`Provide exactly ${questions} MCQ, no more and no less, with 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "questions" array, store the question number in the "number" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${questions} questions.`);
         if(!comp) throw new Error()
         let stream = createWritableStream(res)
         comp.pipeTo(stream)
