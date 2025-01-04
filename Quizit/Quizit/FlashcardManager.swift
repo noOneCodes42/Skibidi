@@ -1,18 +1,18 @@
 //
-//  ViewModelQuiz.swift
+//  FlashcardManager.swift
 //  Quizit
 //
-//  Created by Neel Arora on 1/3/25.
+//  Created by Neel Arora on 1/4/25.
 //
 
 import Foundation
-class ViewModelQuiz: ObservableObject{
+class FlashcardManager: ObservableObject {
     @Published var result: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String = ""
-    @Published var quizItems: [Int: GetModelQuiz] = [:]
-    func postQuiz(quizInputs: SendModelQuiz){
-        guard let url = URL(string: "https://skibidi.hpsk.me/query-language-questions") else {
+    @Published var quizItems: [Int: FlashCardGet] = [:]
+    func postQuiz(quizInputs: FlashCardSend){
+        guard let url = URL(string: "https://skibidi.hpsk.me/query-language-flashcards") else {
             errorMessage = "Invalid URL"
             return
         }
@@ -41,7 +41,7 @@ class ViewModelQuiz: ObservableObject{
             }
             print(safeData)
             do{
-                let questions = try JSONDecoder().decode(GetModelQuiz.self, from: safeData)
+                let questions = try JSONDecoder().decode(FlashCardGet.self, from: safeData)
                 let quizUUID = UUID()
                 DispatchQueue.main.async{
                     self.quizItems[0] = questions

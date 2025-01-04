@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct SendModel: Codable{
+struct SendModelQuiz: Codable{
     var language: String
     var difficulty: Int
     var questions: Int

@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+struct GetModelQuiz: Codable{
+    var questions: [Questions]
+}
+struct Questions: Codable{
+    var number: Int
+    var question: String
+    var options: [String]
+    var answer: Int
+}

@@ -13,6 +13,8 @@ struct FlashCardView: View {
     @State var max: Int = 15
     @State var isDisabledForBack: Bool = true
     @State var isDisabledForFront: Bool = false
+    @StateObject var viewModel: FlashcardManager = FlashcardManager()
+    @State var test: FlashCardSend = FlashCardSend(language: "javascript", difficulty: 3, cards: 15)
     var body: some View {
         VStack{
             ZStack{
@@ -55,7 +57,9 @@ struct FlashCardView: View {
                 .disabled(isDisabledForFront)
                 
             }
-            
+            .onAppear{
+                viewModel.postQuiz(quizInputs: test)
+            }
         }
         
     }
