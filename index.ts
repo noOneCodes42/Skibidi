@@ -54,7 +54,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post("/query-language", async (req, res) => {
+app.post("/query-language-questions", async (req, res) => {
     let language: string = req.body.language
     let difficulty: number = parseInt(req.body.difficulty ?? "")
     let questions: number = parseInt(req.body.questions ?? "")
@@ -77,7 +77,40 @@ app.post("/query-language", async (req, res) => {
     }
     try {
         res.setHeader("Content-Type", "application/json")
-        let comp = await getCompletion(`Provide exactly ${questions} MCQ, no more and no less, with 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "questions" array, store the question number in the "number" field, store the answer as an index in the field "answer", store possible answers in the "options" field, store the question in the "question" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${questions} questions.`);
+        let comp = await getCompletion(`Provide exactly ${questions} MCQ, no more and no less, with a 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "questions" array, store the question number in the "number" field, store the answer as an index in the field "answer", store possible answers in the "options" field, store the question in the "question" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${questions} questions.`);
+        if (!comp) throw new Error()
+        let stream = createWritableStream(res)
+        comp.pipeTo(stream)
+    } catch (_) {
+        res.status(500).json({ error: "500 INTERNAL SERVER ERROR", message: "Our AI Model is having some issues, please be patient." })
+        return;
+    }
+})
+
+app.post("/query-language-flashcards", async (req, res) => {
+    let language: string = req.body.language
+    let difficulty: number = parseInt(req.body.difficulty ?? "")
+    let cards: number = parseInt(req.body.cards ?? "")
+    if (!language || !difficulty || !cards) {
+        res.status(400).json({ error: "400 BAD REQUEST", message: "Make sure you input an appropriate language, cards, and difficulty number" })
+        return;
+    }
+    if (difficulty > 10 || difficulty < 0) {
+        res.status(400).json({ error: "400 BAD REQUEST", message: "Difficulty number out of range" })
+        return;
+    }
+    if (cards < 1 || cards > 50) {
+        res.status(400).json({ error: "400 BAD REQUEST", message: "Cards number out of range" })
+        return;
+    }
+    let exists = languages.find((e: language_type) => e.name.trim().toLowerCase() == language.toLowerCase())
+    if (!exists) {
+        res.status(404).json({ error: "404 NOT FOUND", message: "Could not find the given language" })
+        return;
+    }
+    try {
+        res.setHeader("Content-Type", "application/json")
+        let comp = await getCompletion(`Provide exactly ${cards} Q&A, no more and no less, with a difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "cards" array, store the question number in the "number" field, store the answer in the field "answer", store the question in the "question" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${cards} questions.`);
         if (!comp) throw new Error()
         let stream = createWritableStream(res)
         comp.pipeTo(stream)
