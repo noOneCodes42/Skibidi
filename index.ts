@@ -77,7 +77,7 @@ app.post("/query-language-questions", async (req, res) => {
     }
     try {
         res.setHeader("Content-Type", "application/json")
-        let comp = await getCompletion(`Provide exactly ${questions} MCQ, no more and no less, with a 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "questions" array, store the question number in the "number" field, store the answer as an index in the field "answer", store possible answers in the "options" field, store the question in the "question" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${questions} questions.`);
+        let comp = await getCompletion(`Provide exactly ${questions} MCQ, no more and no less, with a 4 possible answers with difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "questions" array, store the question number in the "number" field, store the answer as an index in the field "answer", store possible answers in the "options" field, store the question in the "question" field, and escape when needed. Please don't format the code block and just send the raw code`);
         if (!comp) throw new Error()
         let stream = createWritableStream(res)
         comp.pipeTo(stream)
@@ -110,7 +110,7 @@ app.post("/query-language-flashcards", async (req, res) => {
     }
     try {
         res.setHeader("Content-Type", "application/json")
-        let comp = await getCompletion(`Provide exactly ${cards} Q&A, no more and no less, with a difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "cards" array, store the question number in the "number" field, store the answer in the field "answer", store the question in the "question" field, and escape when needed. Please avoid formatting the code block and just send the raw code for these ${cards} questions.`);
+        let comp = await getCompletion(`Provide exactly ${cards} Q&A, no more and no less, with a difficulty of ${difficulty}/10 for the programming language ${language}. Provide only JSON with questions in the "cards" array, store the question number in the "number" field, store the answer in the field "answer", store the question in the "question" field, and escape when needed. Please don't format the code block and just send the raw code`);
         if (!comp) throw new Error()
         let stream = createWritableStream(res)
         comp.pipeTo(stream)
