@@ -6,6 +6,7 @@
 //
 
 import Foundation
-struct Language: Codable{
+struct Language: Codable, Hashable{
     var name: String
+    
 }

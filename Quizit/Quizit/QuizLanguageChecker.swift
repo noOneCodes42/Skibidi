@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct QuizLanguageChecker: View {
+    @StateObject var languages = LanguageManager()
+    @State var selectedLanguage = "Swift"
     @State var themes = ["swift", "json", "html"]
     @State private var name: String = ""
     @FocusState private var isFocused: Bool
     @State private var showingAlert: Bool = false
     @State private var canNotMoveOn: Bool = true
+    @State private var searhableText: String = ""
+    
     var body: some View {
         NavigationView{
             VStack{
@@ -20,14 +24,19 @@ struct QuizLanguageChecker: View {
                     .font(.title)
                     .bold(true)
                 Form{
-                    Picker("Language", selection: $themes){
-                        ForEach(themes, id: \.self){ theme in
-                            Text(theme)
+                    if languages.arrayOflanguages.isEmpty{
+                        Text("No languages found")
+                    }else{
+                        Picker("Language", selection: $selectedLanguage){
+                            ForEach(languages.arrayOflanguages, id: \.self){ themes in
+                                Text(themes.name)
+                            }
+                            
                         }
+                        .pickerStyle(WheelPickerStyle())
                     }
                     
                     
-                    .pickerStyle(.wheel)
                     HStack{
                         Text("Difficuly Level:")
                         TextField("Enter a difficulty level", text: $name)
@@ -54,8 +63,8 @@ struct QuizLanguageChecker: View {
                 
                 NavigationLink(destination: QuizView())
                 {
-                        Text("Continue")
-                            .disabled(canNotMoveOn)
+                    Text("Continue")
+                        .disabled(canNotMoveOn)
                     
                     
                 }
@@ -64,6 +73,9 @@ struct QuizLanguageChecker: View {
             }
             
             
+        }
+        .onAppear{
+            languages.getLanguage()
         }
     }
 }

@@ -17,7 +17,7 @@ struct ContentView: View {
                         Label("Stats", systemImage: "chart.bar.xaxis")
                     }
                     .onAppear{
-                        print(languageManager.getLanguage())
+                        
                     }
                 FlashCardView()
                     .tabItem{

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-struct LanguageManager{
-    
+class LanguageManager: ObservableObject{
+    @Published var arrayOflanguages: [Language] = []
     private var url = URL(string: "https://skibidi.hpsk.me/programming-languages")!
     func getLanguage(){
         URLSession.shared.dataTask(with: url){data, response, error in
@@ -17,9 +17,13 @@ struct LanguageManager{
             }
             do{
                 let languages = try JSONDecoder().decode([Language].self, from: data)
-                print(languages)
+                DispatchQueue.main.async{
+                    self.arrayOflanguages.append(contentsOf: languages)
+                    
+                }
             }catch{
                 print("An error has occured: \(error.localizedDescription)")
+                
             }
         }.resume()
     }
