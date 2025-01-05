@@ -19,7 +19,7 @@ struct ContentView: View {
                     .onAppear{
                         
                     }
-                FlashCardView()
+                FlashCardChecker()
                     .tabItem{
                         Label("Flash Card", systemImage: "rectangle")
                     }

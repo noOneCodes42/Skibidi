@@ -7,6 +7,12 @@
 
 import Foundation
 import SwiftData
-class TheData{
-    var testTasken: String
+@Model
+class TestTakenCounter: Identifiable{
+    var id: String
+    var testTaskenCounter: Int
+    init(testTaskenCounter: Int) {
+        self.testTaskenCounter = testTaskenCounter
+        self.id = UUID().uuidString
+    }
 }

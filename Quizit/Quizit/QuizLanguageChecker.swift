@@ -76,7 +76,9 @@ struct QuizLanguageChecker: View {
                                         canNotMoveOn = true
                                     }
                                     intDifficulty = Int(name) ?? 0
-                                    canNotMoveOn = false
+                                    if intDifficulty > 10{
+                                        showingAlert = true
+                                    }
                                 } else {
                                     showingAlert = true
                                     canNotMoveOn = true
@@ -98,7 +100,11 @@ struct QuizLanguageChecker: View {
                                         canNotMoveOn = true
                                     }
                                     questionsAmount = Int(questionsUserInput) ?? 0
-                                    canNotMoveOn = false
+                                    if questionsAmount <= 50{
+                                        canNotMoveOn = false
+                                    }else{
+                                        showingAlert = true
+                                    }
                                 } else {
                                     showingAlert = true
                                     canNotMoveOn = true

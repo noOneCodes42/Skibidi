@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		31F50D792D29EE7700EF819D /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F50D782D29EE7700EF819D /* Format.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		31A3D4132D28443700BD94EF /* Quizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31F50D782D29EE7700EF819D /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		31A3D40A2D28443700BD94EF = {
 			isa = PBXGroup;
 			children = (
+				31F50D782D29EE7700EF819D /* Format.swift */,
 				31A3D4152D28443700BD94EF /* Quizit */,
 				31A3D4142D28443700BD94EF /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31F50D792D29EE7700EF819D /* Format.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

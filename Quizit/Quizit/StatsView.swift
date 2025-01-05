@@ -6,20 +6,18 @@
 //
 
 import SwiftUI
-
+import SwiftData
 struct StatsView: View {
+    @Environment(\.modelContext) private var context
+    @Query private var items: [TestTakenCounter]
+
+    @State var isPresented: Bool = false
     var body: some View {
         VStack{
-            ZStack{
-                Circle()
-                    .stroke(Color.blue, lineWidth: 20)
-                    .frame(width: 240, height: 240)
-                Text("Average")
-            }
-            .padding(.bottom, 130)
-            Text("Test Taken: ")
+            Text("Test Taken: \(items.count)")
                 .padding(.bottom, 30)
-            Text("Mastery: ")
+           Text("Mastery")
+                
         }
     }
 }

@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
-
+import SwiftData
 @main
 struct QuizitApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: TestTakenCounter.self)
+        .modelContainer(for: CodingLanguage.self)
+        .modelContainer(for: Score.self)
+        
     }
 }

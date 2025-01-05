@@ -10,7 +10,7 @@ class FlashcardManager: ObservableObject {
     @Published var result: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String = ""
-    @Published var quizItems: [Int: FlashCardGet] = [:]
+    @Published var flashCardItems: [Int: FlashCardGet] = [:]
     func postQuiz(quizInputs: FlashCardSend){
         guard let url = URL(string: "https://skibidi.hpsk.me/query-language-flashcards") else {
             errorMessage = "Invalid URL"
@@ -44,9 +44,9 @@ class FlashcardManager: ObservableObject {
                 let questions = try JSONDecoder().decode(FlashCardGet.self, from: safeData)
                 let quizUUID = UUID()
                 DispatchQueue.main.async{
-                    self.quizItems[0] = questions
+                    self.flashCardItems[0] = questions
                     self.isLoading = false
-                    print(self.quizItems)
+                    print(self.flashCardItems)
                 }
             }catch{
                 print(error)
