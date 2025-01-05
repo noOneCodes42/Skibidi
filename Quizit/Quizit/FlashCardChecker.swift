@@ -21,7 +21,8 @@ struct FlashCardChecker: View {
     @State private var questionsAmount: Int = 0
     @State private var isNavigationActive = false
     @State var sendModelQuiz: FlashCardSend = FlashCardSend(language: "", difficulty: 1, cards: 6)
-    @State var counter: Int = 0
+    @State var counterFlashCard: Int = 0
+    @State var otherCounterFlashCards: Int = 0
     var body: some View {
         NavigationView {
             VStack {
@@ -43,6 +44,12 @@ struct FlashCardChecker: View {
                                         selectedLanguage = language.name
                                         isLocked = true // Lock the picker
                                         isSearchListVisible = false // Hide the search list
+                                        if language.name.isEmpty {
+                                            showingAlertFlashCard = true
+                                            canNotMoveOn = true
+                                        }else{
+                                            otherCounterFlashCards = 1
+                                        }
                                         // Make the search list items transparent
                                     } label: {
                                         Text(language.name)
@@ -83,7 +90,7 @@ struct FlashCardChecker: View {
                                         showingAlertFlashCard = true
                                         canNotMoveOn = true
                                     }else{
-                                        counter = 1
+                                        counterFlashCard = 1
                                     }
                                     intDifficulty = Int(name) ?? 0
                                     if intDifficulty > 10{
@@ -92,7 +99,7 @@ struct FlashCardChecker: View {
                                         canNotMoveOn = true
                                     }
                                 }
-                                    
+                                
                                 
                             }
                             .alert(isPresented: $showingAlertFlashCard) {
@@ -112,7 +119,7 @@ struct FlashCardChecker: View {
                                     }
                                     
                                     questionsAmount = Int(questionsUserInput) ?? 0
-                                    if questionsAmount <= 50 && counter == 1{
+                                    if questionsAmount <= 50 && counterFlashCard == 1{
                                         canNotMoveOn = false
                                         showingAlertFlashCard = false
                                     }else{
@@ -132,16 +139,16 @@ struct FlashCardChecker: View {
                     
                     
                     // Continue Button
-
+                    
                 }
                 NavigationLink(destination: FlashCardView(flashCard: $sendModelQuiz), isActive: $isNavigationActive){
                     Text("Continue")
                         .padding()
                         .onTapGesture {
                             isNavigationActive = true
-                            if sendModelQuiz.language.isEmpty {
-                                sendModelQuiz = FlashCardSend(language: selectedLanguage, difficulty: intDifficulty, cards: questionsAmount)
-                            }
+                            
+                            sendModelQuiz = FlashCardSend(language: selectedLanguage, difficulty: intDifficulty, cards: questionsAmount)
+                            
                             print(sendModelQuiz)
                         }
                         .disabled(canNotMoveOn)

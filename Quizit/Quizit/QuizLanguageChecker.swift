@@ -15,6 +15,7 @@ struct QuizLanguageChecker: View {
     @State private var isNavigationActive = false
     @State var sendModelQuiz: SendModelQuiz = SendModelQuiz(language: "", difficulty: 1, questions: 6)
     @State var counterForQuiz: Int = 0
+    @State var otherCounter: Int = 0
     var body: some View {
         NavigationView {
             VStack {
@@ -36,6 +37,12 @@ struct QuizLanguageChecker: View {
                                         selectedLanguage = language.name
                                         isLocked = true // Lock the picker
                                         isSearchListVisible = false // Hide the search list
+                                        if language.name.isEmpty {
+                                            showingAlert = true
+                                            canNotMoveOn = true
+                                        }else{
+                                            otherCounter = 1
+                                        }
                                          // Make the search list items transparent
                                     } label: {
                                         Text(language.name)
@@ -105,7 +112,7 @@ struct QuizLanguageChecker: View {
                                         canNotMoveOn = true
                                     }
                                     questionsAmount = Int(questionsUserInput) ?? 0
-                                    if questionsAmount <= 50 && counterForQuiz == 1{
+                                    if questionsAmount <= 50 && counterForQuiz == 1 && otherCounter == 1{
                                         canNotMoveOn = false
                                     }else{
                                         showingAlert = true
