@@ -91,7 +91,7 @@ struct QuizLanguageChecker: View {
                     }
                     HStack {
                         Text("Questions")
-                        TextField("Enter a difficulty level", text: $questionsUserInput)
+                        TextField("How many questions?", text: $questionsUserInput)
                             .multilineTextAlignment(.trailing)
                             .onSubmit {
                                 if let _ = Int(questionsUserInput) {

@@ -14,8 +14,6 @@ struct QuizitApp: App {
             ContentView()
         }
         .modelContainer(for: TestTakenCounter.self)
-        .modelContainer(for: CodingLanguage.self)
-        .modelContainer(for: Score.self)
         
     }
 }

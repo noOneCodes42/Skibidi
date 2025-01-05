@@ -53,7 +53,7 @@ struct QuizView: View {
                                                 .padding(.bottom, 40)
                                                 .padding()
                                                 .multilineTextAlignment(.center)
-                                                .lineLimit(4)
+                                                .lineLimit(2)
                                                 .foregroundStyle(theColor)
                                             
                                             // Display options for each question
@@ -145,25 +145,32 @@ struct QuizView: View {
                                         
                                     }
                                     .onAppear{
+                                        print("Entered On Appear")
                                         numberOfTestsTaken += 1
                                         let item = TestTakenCounter(testTaskenCounter: numberOfTestsTaken)
                                         context.insert(item)
                                         
                                         
-                                        if let language = languageData.first(where: {$0.language == sendModelQuiz.language}){
-                                            let scores = language.score
-                                            if scores.count > 5{
-                                                language.score.removeLast()
-                                            }
-                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
-                                            language.score.append(score)
-                                            let item1 = CodingLanguage(score: language.score, language: sendModelQuiz.language)
-                                            let index = languageData.firstIndex(where: $0.language == sendModelQuiz.language)
-                                            context.get(languageData)
-                                        }
+//                                        if let language = languageData.first(where: {$0.language == sendModelQuiz.language}){
+//                                            print("Entered If Let")
+//                                            let scores = language.score
+//                                            if scores.count > 5{
+//                                                language.score.removeLast()
+//                                            }
+//                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
+//                                            language.score.append(score)
+//                                            print("LanuageData before the do block: \(languageData)")
+//                                            do{                                      try context.save()
+//                                                print("LanguageData: \(languageData)")
+//                                            }catch{
+//                                                print(error)
+//                                            }
+//                                        }else{
+//                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
+//                                            let item1 = CodingLanguage(score: [score], language: sendModelQuiz.language)
+//                                        }
                                         
-//                                        let item1 = CodingLanguage(score: [0], language: sendModelQuiz.language)
-//                                        context.get(languageData)
+                                        
                                     }
                                 }
                             }
