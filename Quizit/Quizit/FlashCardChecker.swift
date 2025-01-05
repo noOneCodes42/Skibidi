@@ -21,6 +21,7 @@ struct FlashCardChecker: View {
     @State private var questionsAmount: Int = 0
     @State private var isNavigationActive = false
     @State var sendModelQuiz: FlashCardSend = FlashCardSend(language: "", difficulty: 1, cards: 6)
+    @State var counter: Int = 0
     var body: some View {
         NavigationView {
             VStack {
@@ -81,6 +82,8 @@ struct FlashCardChecker: View {
                                     if name.isEmpty {
                                         showingAlertFlashCard = true
                                         canNotMoveOn = true
+                                    }else{
+                                        counter = 1
                                     }
                                     intDifficulty = Int(name) ?? 0
                                     if intDifficulty > 10{
@@ -109,7 +112,7 @@ struct FlashCardChecker: View {
                                     }
                                     
                                     questionsAmount = Int(questionsUserInput) ?? 0
-                                    if questionsAmount <= 50{
+                                    if questionsAmount <= 50 && counter == 1{
                                         canNotMoveOn = false
                                         showingAlertFlashCard = false
                                     }else{
@@ -133,6 +136,7 @@ struct FlashCardChecker: View {
                 }
                 NavigationLink(destination: FlashCardView(flashCard: $sendModelQuiz), isActive: $isNavigationActive){
                     Text("Continue")
+                        .padding()
                         .onTapGesture {
                             isNavigationActive = true
                             if sendModelQuiz.language.isEmpty {

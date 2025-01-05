@@ -6,27 +6,35 @@
 //
 
 import Foundation
-import SwiftData
 
-@Model
-class CodingLanguage{
-    var language: String
-    var score: [Score]
-    init(score: [Score], language: String) {
-        self.score = score
+import RealmSwift
+
+class CodingLanguage: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var language: String
+    @Persisted var scores: List<Score>
+    
+    convenience init(language: String, scores: [Score] = []) {
+        self.init()
         self.language = language
+        self.scores.append(objectsIn: scores)
     }
 }
 
-@Model
-class Score{
-    var score: Double
-    var difficuly: Int
-    init(score: Double, difficuly: Int) {
+class Score: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var score: Double
+    @Persisted var difficulty: Int
+    @Persisted var questions: Int
+    
+    convenience init(score: Double, difficulty: Int, questions: Int) {
+        self.init()
         self.score = score
-        self.difficuly = difficuly
+        self.difficulty = difficulty
+        self.questions = questions
     }
 }
+
 
 
 

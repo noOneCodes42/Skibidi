@@ -9,8 +9,7 @@ import SwiftUI
 import SwiftData
 struct FlashCardView: View {
     @State var counter: Int = 0
-    @Environment(\.modelContext) private var context
-    @Query private var items: [TestTakenCounter]
+   
     // Get the backend for this
     @State var max: Int = 15
     @State var isDisabledForBack: Bool = true

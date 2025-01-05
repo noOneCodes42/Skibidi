@@ -7,8 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		314A98AD2D2A6926006EF605 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 314A98AC2D2A6926006EF605 /* RealmSwift */; };
+		314A98AE2D2A8B23006EF605 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 314A98AC2D2A6926006EF605 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		31F50D792D29EE7700EF819D /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F50D782D29EE7700EF819D /* Format.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		314A98842D2A5E51006EF605 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				314A98AE2D2A8B23006EF605 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		31A3D4132D28443700BD94EF /* Quizit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quizit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -28,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				314A98AD2D2A6926006EF605 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +78,7 @@
 				31A3D40F2D28443700BD94EF /* Sources */,
 				31A3D4102D28443700BD94EF /* Frameworks */,
 				31A3D4112D28443700BD94EF /* Resources */,
+				314A98842D2A5E51006EF605 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -71,6 +89,7 @@
 			);
 			name = Quizit;
 			packageProductDependencies = (
+				314A98AC2D2A6926006EF605 /* RealmSwift */,
 			);
 			productName = Quizit;
 			productReference = 31A3D4132D28443700BD94EF /* Quizit.app */;
@@ -100,6 +119,9 @@
 			);
 			mainGroup = 31A3D40A2D28443700BD94EF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				314A98A92D2A6926006EF605 /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 31A3D4142D28443700BD94EF /* Products */;
 			projectDirPath = "";
@@ -259,7 +281,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Quizit/Preview Content\"";
-				DEVELOPMENT_TEAM = SUC88AK8C4;
+				DEVELOPMENT_TEAM = 65C2DBC547;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -288,7 +310,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Quizit/Preview Content\"";
-				DEVELOPMENT_TEAM = SUC88AK8C4;
+				DEVELOPMENT_TEAM = 65C2DBC547;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -331,6 +353,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		314A98A92D2A6926006EF605 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		314A98AC2D2A6926006EF605 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 314A98A92D2A6926006EF605 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 31A3D40B2D28443700BD94EF /* Project object */;
 }

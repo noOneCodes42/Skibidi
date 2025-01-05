@@ -1,5 +1,5 @@
 import SwiftUI
-import SwiftData
+import RealmSwift
 struct QuizView: View {
     @State private var currentValue: Int = 0
     @State private var maxValue: Int = 10
@@ -7,10 +7,8 @@ struct QuizView: View {
     @State private var frontIsDisabled: Bool = false
     @Binding var sendModelQuiz: SendModelQuiz
     @StateObject var viewModel: ViewModelQuiz = ViewModelQuiz()
-    @Environment(\.modelContext) private var context
-    @Query private var items: [TestTakenCounter]
-    @Query private var languageData: [CodingLanguage]
-    @State private var isDataLoaded: Bool = false // Track if data is loaded
+    @ObservedResults(CodingLanguage.self) var realmContext
+    @ObservedResults(TestTakenCounter.self) var counterContext // Track if data is loaded
     @State private var isLoading: Bool = true // Track if data is loading
     @State private var theColor: Color = .black
     @State private var counter: Int = 0 // Track number of correct answers
@@ -24,8 +22,7 @@ struct QuizView: View {
     @State private var isSubmitted: Bool = false
     @State private var colorCorrectOrIncorrect: Color = .blue
     @State private var showSheet: Bool = false
-    @State private var numberOfTestsTaken: Int = 0
-    
+    @State private var canNotBeSubmitted: Bool = true
     var body: some View {
         
         VStack {
@@ -46,14 +43,13 @@ struct QuizView: View {
                                     // Iterate over each question in the current quiz
                                     ForEach(quiz.questions.indices, id: \.self) { questionIndex in
                                         let question = quiz.questions[questionIndex]
-                                        let correctAnswerIndex = question.answer // This is an index of the correct answer
                                         
                                         VStack {
                                             Text("\(question.number). \(question.question)")
                                                 .padding(.bottom, 40)
                                                 .padding()
+                                                .scenePadding()
                                                 .multilineTextAlignment(.center)
-                                                .lineLimit(2)
                                                 .foregroundStyle(theColor)
                                             
                                             // Display options for each question
@@ -61,19 +57,21 @@ struct QuizView: View {
                                                 ForEach(0..<2, id:\.self) { index in
                                                     Capsule()
                                                         .fill(self.userAnswered[questionIndex] == question.options[index] ? (answerFeedback[questionIndex] == true ? Color.green : colorCorrectOrIncorrect): Color.gray)
-                                                        .frame(width: 200, height: 100)
+                                                        .frame(width: 175)
+                                                        .frame(minHeight: 100)
                                                         .overlay(
                                                             Text(question.options[index])
                                                                 .multilineTextAlignment(.center)
-                                                                .lineLimit(15)
-                                                                .padding()
+                                                            
+                                                            
+                                                                .scenePadding()
                                                                 .onTapGesture {
                                                                     if !isSubmitted{
                                                                         userAnswered[questionIndex] = question.options[index]
                                                                     }
                                                                 }
                                                             
-                                                                .lineLimit(5)
+                                                            
                                                         )
                                                         .padding(index == 0 ? .leading : .trailing, 10)
                                                     
@@ -85,21 +83,23 @@ struct QuizView: View {
                                                 ForEach(2..<4, id:\.self) { index in
                                                     Capsule()
                                                         .fill(self.userAnswered[questionIndex] == question.options[index] ? (answerFeedback[questionIndex] == true ? Color.green : colorCorrectOrIncorrect): Color.gray)
-                                                        .frame(width: 200, height: 100)
+                                                        .frame(width: 175)
+                                                        .frame(minHeight: 100)
                                                         .overlay(
                                                             Text(question.options[index])
                                                                 .multilineTextAlignment(.center)
-                                                                .lineLimit(15)
-                                                                .padding()
+                                                            
+                                                            
                                                                 .onTapGesture {
                                                                     if !isSubmitted{
                                                                         userAnswered[questionIndex] = question.options[index]
                                                                     }
                                                                 }
                                                             
-                                                                .lineLimit(5)
+                                                            
                                                         )
                                                         .padding(index == 2 ? .leading : .trailing, 10)
+                                                    
                                                     
                                                     
                                                 }
@@ -128,12 +128,16 @@ struct QuizView: View {
                                             }
                                         }
                                         showSheet.toggle()
+                                        
                                     } label: {
                                         
                                         Text("Submit")
                                     }
+                                    .disabled(canNotBeSubmitted)
                                 }
+                                
                                 .navigationTitle("Test for \(sendModelQuiz.language)")
+                                
                                 .sheet(isPresented: $showSheet) {
                                     VStack{
                                         Text("Your Score: ")
@@ -146,36 +150,70 @@ struct QuizView: View {
                                     }
                                     .onAppear{
                                         print("Entered On Appear")
-                                        numberOfTestsTaken += 1
-                                        let item = TestTakenCounter(testTaskenCounter: numberOfTestsTaken)
-                                        context.insert(item)
+                                        let realm = try! Realm()
+                                        if let counter = realm.objects(TestTakenCounter.self).first {
+                                            try! realm.write {
+                                                realm.create(TestTakenCounter.self, value: ["id": counter.id, "testTakenCounter": counter.testTakenCounter + 1], update: .modified)
+                                            }
+                                        } else {
+                                            print("creating counter")
+                                            try! realm.write {
+                                                realm.create(TestTakenCounter.self, value: ["testTakenCounter": 1])
+                                            }
+                                        }
+                                        if let language = realm.objects(CodingLanguage.self).filter({$0.language == sendModelQuiz.language}).first {
+                                            try! realm.write {
+                                                let scores = language.scores
+                                                if scores.count > 5 {
+                                                    scores.removeLast(1)
+                                                }
+                                                let score = Score(score: Double(counter) / Double(sendModelQuiz.questions), difficulty: sendModelQuiz.difficulty, questions: sendModelQuiz.questions)
+                                                scores.append(score)
+                                                realm.create(CodingLanguage.self, value: ["id": language.id, "language": sendModelQuiz.language, "scores": scores], update: .modified)
+                                            }
+                                        } else {
+                                            let score = Score(score: Double(counter) / Double(sendModelQuiz.questions), difficulty: sendModelQuiz.difficulty, questions: sendModelQuiz.questions)
+                                            try! realm.write {
+                                                realm.create(CodingLanguage.self, value: ["language": sendModelQuiz.language, "scores": [score]])
+                                            }
+                                        }
+                                        let getObjects = realm.objects(CodingLanguage.self).filter("language == '\(sendModelQuiz.language)'")
+                                        print(getObjects)
+                                        let count = realm.objects(TestTakenCounter.self).first?.testTakenCounter
+                                        print(count)
                                         
-                                        
-//                                        if let language = languageData.first(where: {$0.language == sendModelQuiz.language}){
-//                                            print("Entered If Let")
-//                                            let scores = language.score
-//                                            if scores.count > 5{
-//                                                language.score.removeLast()
-//                                            }
-//                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
-//                                            language.score.append(score)
-//                                            print("LanuageData before the do block: \(languageData)")
-//                                            do{                                      try context.save()
-//                                                print("LanguageData: \(languageData)")
-//                                            }catch{
-//                                                print(error)
-//                                            }
-//                                        }else{
-//                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
-//                                            let item1 = CodingLanguage(score: [score], language: sendModelQuiz.language)
-//                                        }
+                                        //                                        if let language = languageData.first(where: {$0.language == sendModelQuiz.language}){
+                                        //                                            print("Entered If Let")
+                                        //                                            let scores = language.score
+                                        //                                            if scores.count > 5{
+                                        //                                                language.score.removeLast()
+                                        //                                            }
+                                        //                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
+                                        //                                            language.score.append(score)
+                                        //                                            print("LanuageData before the do block: \(languageData)")
+                                        //                                            do{                                      try context.save()
+                                        //                                                print("LanguageData: \(languageData)")
+                                        //                                            }catch{
+                                        //                                                print(error)
+                                        //                                            }
+                                        //                                        }else{
+                                        //                                            let score = Score(score: Double(counter)/Double(sendModelQuiz.questions), difficuly: sendModelQuiz.difficulty)
+                                        //                                            let item1 = CodingLanguage(score: [score], language: sendModelQuiz.language)
+                                        //                                        }
                                         
                                         
                                     }
                                 }
+                                .onChange(of: userAnswered) { oldValue, newValue in
+                                    if userAnswered.keys.count == quiz.questions.count {
+                                        canNotBeSubmitted = false
+                                    }
+                                }
                             }
                         }
+                        
                     }
+                    .scenePadding()
                 } else {
                     Text("Generating Questions ...")
                         .padding(.bottom, 20)
@@ -200,7 +238,8 @@ struct QuizView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Simulate a delay here (e.g., for API response)
             // When the data has been fetched, update state variables
             isLoading = false  // Hide loading indicator
-            isDataLoaded = true // Indicate that data is loaded
+            // Indicate that data is loaded
         }
     }
 }
+

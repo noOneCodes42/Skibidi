@@ -14,6 +14,7 @@ struct QuizLanguageChecker: View {
     @State private var questionsAmount: Int = 0
     @State private var isNavigationActive = false
     @State var sendModelQuiz: SendModelQuiz = SendModelQuiz(language: "", difficulty: 1, questions: 6)
+    @State var counterForQuiz: Int = 0
     var body: some View {
         NavigationView {
             VStack {
@@ -39,10 +40,12 @@ struct QuizLanguageChecker: View {
                                     } label: {
                                         Text(language.name)
                                     }
+                                    .id(UUID())
                                     
                                 }
                             }
                         }
+                        
                     }
 
                     // Show message when no languages found
@@ -74,6 +77,8 @@ struct QuizLanguageChecker: View {
                                     if name.isEmpty {
                                         showingAlert = true
                                         canNotMoveOn = true
+                                    }else{
+                                        counterForQuiz = 1
                                     }
                                     intDifficulty = Int(name) ?? 0
                                     if intDifficulty > 10{
@@ -100,7 +105,7 @@ struct QuizLanguageChecker: View {
                                         canNotMoveOn = true
                                     }
                                     questionsAmount = Int(questionsUserInput) ?? 0
-                                    if questionsAmount <= 50{
+                                    if questionsAmount <= 50 && counterForQuiz == 1{
                                         canNotMoveOn = false
                                     }else{
                                         showingAlert = true
@@ -116,16 +121,18 @@ struct QuizLanguageChecker: View {
                         Text("/ 50")
                     }
                 }
-
+                
                 // Continue Button
                 NavigationLink(destination: QuizView(sendModelQuiz: $sendModelQuiz), isActive: $isNavigationActive){
                     Text("Continue")
+                        .padding()
                         .onTapGesture {
                             isNavigationActive = true
-                            if sendModelQuiz.language.isEmpty {
+                            
                                 sendModelQuiz = SendModelQuiz(language: selectedLanguage, difficulty: intDifficulty, questions: questionsAmount)
-                            }
+                            
                             print(sendModelQuiz)
+                        
                         }
                         .disabled(canNotMoveOn)
                 }

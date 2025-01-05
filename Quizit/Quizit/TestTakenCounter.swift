@@ -6,13 +6,14 @@
 //
 
 import Foundation
-import SwiftData
-@Model
-class TestTakenCounter: Identifiable{
-    var id: String
-    var testTaskenCounter: Int
-    init(testTaskenCounter: Int) {
-        self.testTaskenCounter = testTaskenCounter
-        self.id = UUID().uuidString
+import RealmSwift
+
+class TestTakenCounter: Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) var id: String = UUID().uuidString
+    @Persisted var testTakenCounter: Int
+    
+    convenience init(testTakenCounter: Int) {
+        self.init()
+        self.testTakenCounter = testTakenCounter
     }
 }

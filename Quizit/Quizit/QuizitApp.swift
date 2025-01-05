@@ -13,7 +13,7 @@ struct QuizitApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: TestTakenCounter.self)
+        
         
     }
 }
